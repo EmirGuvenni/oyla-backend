@@ -7,8 +7,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - ${HTTP_PORT}:${HTTP_PORT}
-      - ${SOCKET_PORT}:${SOCKET_PORT}
+      - ${PORT}:${PORT}
     env_file:
       - .env
     volumes:
