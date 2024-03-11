@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  oyla-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${SOCKET_PORT}:${SOCKET_PORT}
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      - redis
+      - mongo
+
+  redis:
+    image: redis/redis-stack-server
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis
+
+  mongo:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo
+
+networks:
+  redis:
+    driver: bridge
+  mongo:
+    driver: bridge
+
+volumes:
+  redis-data:
+  mongo-data:
