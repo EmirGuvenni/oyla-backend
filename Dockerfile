@@ -10,4 +10,4 @@ COPY ./tsconfig.json /app/tsconfig.json
 RUN yarn install
 RUN yarn build
 
-CMD yarn dev
+CMD yarn start
