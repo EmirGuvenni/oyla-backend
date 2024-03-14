@@ -17,11 +17,13 @@ async function extractEventModules(dir: string) {
       continue;
     }
 
-    if (!file.endsWith('.ts')) {
+    if (!file.endsWith('.ts') && !file.endsWith('.js')) {
       continue;
     }
 
-    const eventName = file.substring(0, file.indexOf('.ts'));
+    const eventName = file.endsWith('.ts')
+      ? file.substring(0, file.indexOf('.ts'))
+      : file.substring(0, file.indexOf('.js'));
 
     try {
       const eventModule: SocketEvent = (await import(path.join(config.BASE_DIR, dir, file)))
