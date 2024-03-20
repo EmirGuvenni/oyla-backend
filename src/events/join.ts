@@ -8,12 +8,11 @@ interface JoinData {
 
 export default {
   name: 'join',
-  callback: (socket: Socket, data: JoinData, cb: (arg: unknown) => void) => {
+  callback: (socket: Socket, data: JoinData) => {
     const room = coordinator.getRoom(data.roomId);
 
     if (!room) {
-      cb({ error: 'Room not found' });
-      return;
+      return { error: 'Room not found' };
     }
 
     room.join(socket.data.user);
