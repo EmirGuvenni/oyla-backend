@@ -23,7 +23,7 @@ httpServer.listen(config.PORT, () => {
   console.log(`Server running on port ${config.PORT}`);
 });
 
-const io = new Server(httpServer);
+const io = new Server(httpServer, { cors: { origin: '*' } });
 
 io.use(authMiddleware);
 
