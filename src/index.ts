@@ -1,3 +1,4 @@
+import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 import http from 'http';
@@ -14,6 +15,7 @@ const httpServer = http.createServer(app);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use();
 app.use(userRouter);
 app.use(roomRouter);
 
