@@ -1,5 +1,7 @@
 import type { Socket } from 'socket.io';
 
+import User from '../classes/User';
+
 declare global {
   // Helper types
   type PartiallyOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
@@ -20,6 +22,14 @@ declare global {
     id: string;
     name: string;
     accessToken: string;
+  }
+}
+
+declare module 'socket.io' {
+  interface Socket {
+    data: {
+      user: User;
+    };
   }
 }
 
