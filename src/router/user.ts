@@ -18,3 +18,9 @@ userRouter.post('/guest', async (req, res) => {
 
   return res.json({ token, user: user.info });
 });
+
+userRouter.get('/user/:id', async (req, res) => {
+  const user = await User.getUser(req.params.id);
+
+  return res.json(user?.info);
+});

@@ -3,6 +3,12 @@ import { Socket } from 'socket.io';
 
 import redis from '../providers/redis';
 
+interface UserCache {
+  id: string;
+  name: string;
+  accessToken: string;
+}
+
 export default class User {
   public id;
   public socket: Socket | undefined;
@@ -16,6 +22,16 @@ export default class User {
 
   static generateAccessToken() {
     return crypto.randomBytes(256).toString('hex');
+  }
+
+  static async getUser(id: string) {
+    const userCache = await redis.jsonGet<UserCache>(`user:${id}`);
+
+    if (!userCache) {
+      return null;
+    }
+
+    return new User(userCache.name, userCache.accessToken, userCache.id);
   }
 
   constructor(
