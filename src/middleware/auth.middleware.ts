@@ -27,7 +27,7 @@ async function getAndValidateUser(id: string, accessToken: string): Promise<User
 
 export async function authMiddleware(socket: Socket, next: (err?: Error) => void) {
   try {
-    const token = socket.handshake.headers.authorization?.split(' ')[1];
+    const token = socket.handshake.auth.token?.split(' ')[1];
 
     if (!token) {
       return next(new Error('unauthorized'));
