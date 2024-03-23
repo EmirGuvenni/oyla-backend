@@ -19,7 +19,6 @@ export default {
     });
 
     coordinator.createRoom(room);
-    room.join(socket.data.user);
     return room.info;
   },
 } as SocketEvent;
