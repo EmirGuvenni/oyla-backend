@@ -4,6 +4,7 @@ import type { Server } from 'socket.io';
 
 import WsException from '../classes/WsException';
 import config from '../config';
+import { ERROR_CODES } from '../constants';
 
 async function extractEventModules(dir: string) {
   const files = await fs.readdir(path.join(config.BASE_DIR, dir));
@@ -45,10 +46,16 @@ export default async function registerEvents(io: Server, dir: string) {
     for (const module of modules) {
       socket.on(module.name, async (arg, cb) => {
         try {
-          const res = await module.callback(socket, arg);
+          const data = module.validator.parse(arg);
+          const res = await module.callback(socket, data);
           cb(res);
         } catch (err) {
-          cb({ error: (err as WsException).message });
+          if (err instanceof WsException) {
+            cb(err);
+          } else {
+            console.error(`Error processing event ${module.name}:`, err);
+            cb(new WsException(ERROR_CODES.unknownError));
+          }
         }
       });
     }

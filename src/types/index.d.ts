@@ -1,4 +1,5 @@
 import type { Socket } from 'socket.io';
+import type { ZodObject } from 'zod';
 
 import User from '../classes/User';
 
@@ -11,11 +12,12 @@ declare global {
 
   type SocketEvent = {
     name: string;
-    callback: (socket: Socket, data: unknown) => unknown;
+    validator: ZodObject;
+    callback: (socket: Socket, data: T) => unknown;
   };
 
   interface Deck {
-    cards: [number, ...number[]];
+    cards: number[];
   }
 
   interface UserCache {
