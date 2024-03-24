@@ -16,7 +16,7 @@ async function getAndValidateUser(id: string, accessToken: string): Promise<User
     throw new Error('User not found');
   }
 
-  const user = new User(userData.name, userData.accessToken);
+  const user = new User(userData.name, userData.accessToken, id);
 
   if (user.validate(accessToken)) {
     return user;
