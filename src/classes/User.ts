@@ -1,7 +1,9 @@
 import * as crypto from 'crypto';
 import { Socket } from 'socket.io';
 
+import { USER_ID_LENGTH } from '../constants';
 import redis from '../providers/redis';
+import { createRandomString } from '../utils';
 
 interface UserCache {
   id: string;
@@ -39,7 +41,7 @@ export default class User {
     private accessToken: string,
     id?: string,
   ) {
-    this.id = id || crypto.randomBytes(16).toString('hex');
+    this.id = id || createRandomString(USER_ID_LENGTH);
   }
 
   public validate(accessToken: string) {

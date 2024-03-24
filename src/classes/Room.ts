@@ -1,10 +1,11 @@
-import { randomBytes } from 'crypto';
 import { BroadcastOperator, Socket } from 'socket.io';
 import {
   DecorateAcknowledgementsWithMultipleResponses,
   DefaultEventsMap,
 } from 'socket.io/dist/typed-events';
 
+import { ERROR_CODES, ROOM_ID_LENGTH } from '../constants';
+import { createRandomString } from '../utils';
 import User from './User';
 import WsException from './WsException';
 
@@ -16,7 +17,7 @@ interface RoomOptions {
 }
 
 export default class Room {
-  public id = randomBytes(8).toString('hex');
+  public id = createRandomString(ROOM_ID_LENGTH);
   public name: string;
   public deck: Deck;
 
