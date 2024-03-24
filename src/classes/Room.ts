@@ -77,19 +77,22 @@ export default class Room {
     this.socket.emit('joined', user.info);
   }
 
-  public async leave(userId: string) {
-    if (!this.users[userId]) throw new WsException("You're not in room");
+  public async leave(user: User) {
+    if (!this.users[user.id]) throw new WsException(ERROR_CODES.userNotInRoom);
 
-    const user = this.getUser(userId);
+    delete this.users[user.id];
+    delete this.round[user.id];
 
-    delete this.users[userId];
-    delete this.round[userId];
+    if (user.id === this.master) {
+      if (Object.keys(this.users).length === 0) {
+        this.destroy();
+        return;
+      }
 
-    if (userId === this.master) {
       this.transferMaster(Object.values(this.users)[0]);
     }
 
-    this.socket.emitWithAck('left', this.getUser(userId));
+    this.socket.emitWithAck('left', user.info);
 
     if (!user.socket) throw new WsException('User does not have a socket connection');
 
