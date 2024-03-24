@@ -5,6 +5,7 @@ import {
 } from 'socket.io/dist/typed-events';
 
 import { ERROR_CODES, ROOM_ID_LENGTH } from '../constants';
+import coordinator from '../providers/coordinator';
 import { createRandomString } from '../utils';
 import User from './User';
 import WsException from './WsException';
@@ -85,7 +86,7 @@ export default class Room {
 
     if (user.id === this.master) {
       if (Object.keys(this.users).length === 0) {
-        this.destroy();
+        coordinator.deleteRoom(this.id);
         return;
       }
 
