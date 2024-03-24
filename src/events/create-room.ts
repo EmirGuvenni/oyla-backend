@@ -8,7 +8,7 @@ import coordinator from '../providers/coordinator';
 const CreateRoomDataSchema = z.object({
   name: z.string().min(MIN_ROOM_NAME_LENGTH).max(MAX_ROOM_NAME_LENGTH),
   deck: z.object({
-    cards: z.array(z.number()),
+    cards: z.array(z.number().or(z.string().min(1))),
   }),
 });
 

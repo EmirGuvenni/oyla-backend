@@ -17,7 +17,7 @@ declare global {
   };
 
   interface Deck {
-    cards: number[];
+    cards: (number | string)[];
   }
 
   interface UserCache {
