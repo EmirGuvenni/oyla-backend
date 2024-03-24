@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import type { Server } from 'socket.io';
+import { ZodError } from 'zod';
 
 import WsException from '../classes/WsException';
 import config from '../config';
@@ -50,7 +51,7 @@ export default async function registerEvents(io: Server, dir: string) {
           const res = await module.callback(socket, data);
           cb(res);
         } catch (err) {
-          if (err instanceof WsException) {
+          if (err instanceof WsException || err instanceof ZodError) {
             cb(err);
           } else {
             console.error(`Error processing event ${module.name}:`, err);
