@@ -67,11 +67,11 @@ export default class Room {
   }
 
   public join(user: User) {
-    if (this.users[user.id]) throw new WsException('User already in room');
+    if (this.users[user.id]) throw new WsException(ERROR_CODES.userAlreadyInRoom);
 
     this.users[user.id] = user;
 
-    if (!user.socket) throw new WsException('User does not have a socket connection');
+    if (!user.socket) throw new WsException(ERROR_CODES.userDoesNotHaveSocket);
 
     user.socket.join(this.id);
     this.socket.emit('joined', user.info);
@@ -94,13 +94,13 @@ export default class Room {
 
     this.socket.emitWithAck('left', user.info);
 
-    if (!user.socket) throw new WsException('User does not have a socket connection');
+    if (!user.socket) throw new WsException(ERROR_CODES.userDoesNotHaveSocket);
 
     user.socket.leave(this.id);
   }
 
   public kick(userId: string) {
-    if (!this.users[userId]) throw new WsException('User not in room');
+    if (!this.users[userId]) throw new WsException(ERROR_CODES.userNotInRoom);
 
     const user = this.getUser(userId);
 
@@ -109,13 +109,13 @@ export default class Room {
 
     this.socket.emitWithAck('kicked', this.getUser(userId));
 
-    if (!user.socket) throw new WsException('User does not have a socket connection');
+    if (!user.socket) throw new WsException(ERROR_CODES.userDoesNotHaveSocket);
 
     user.socket.leave(this.id);
   }
 
   public transferMaster(to: User) {
-    if (!this.users[to.id]) throw new WsException('User not in room');
+    if (!this.users[to.id]) throw new WsException(ERROR_CODES.userNotInRoom);
 
     this.master = to.id;
     this.socket.emit('new-master', to);
@@ -137,7 +137,7 @@ export default class Room {
   }
 
   public startNewRound() {
-    if (this.isPlaying) throw new WsException('Game already started');
+    if (this.isPlaying) throw new WsException(ERROR_CODES.gameAlreadyStarted);
 
     this.isPlaying = true;
     this.round = {};
@@ -145,8 +145,8 @@ export default class Room {
   }
 
   public vote(userId: string, card: ArrayElement<Deck['cards']>) {
-    if (!this.users[userId]) throw new WsException('User not in room');
-    if (!this.deck.cards.includes(card)) throw new WsException('Invalid card');
+    if (!this.users[userId]) throw new WsException(ERROR_CODES.userNotInRoom);
+    if (!this.deck.cards.includes(card)) throw new WsException(ERROR_CODES.invalidCard);
 
     this.round[userId] = card;
 
@@ -154,8 +154,8 @@ export default class Room {
   }
 
   public changeVote(userId: string, card: ArrayElement<Deck['cards']>) {
-    if (!this.users[userId]) throw new WsException('User not in room');
-    if (!this.deck.cards.includes(card)) throw new WsException('Invalid card');
+    if (!this.users[userId]) throw new WsException(ERROR_CODES.userNotInRoom);
+    if (!this.deck.cards.includes(card)) throw new WsException(ERROR_CODES.invalidCard);
 
     this.round[userId] = card;
 
@@ -163,7 +163,7 @@ export default class Room {
   }
 
   public removeVote(id: string) {
-    if (!this.users[id]) throw new WsException('User not in room');
+    if (!this.users[id]) throw new WsException(ERROR_CODES.userNotInRoom);
 
     delete this.round[id];
 
@@ -171,8 +171,8 @@ export default class Room {
   }
 
   public endRound() {
-    if (!this.someVoted()) throw new WsException('No one voted');
-    if (!this.isPlaying) throw new WsException('Game not started');
+    if (!this.someVoted()) throw new WsException(ERROR_CODES.noOneVoted);
+    if (!this.isPlaying) throw new WsException(ERROR_CODES.gameNotStarted);
 
     const votes = Object.values(this.round);
     const result = votes.reduce(
