@@ -12,11 +12,6 @@ const config = {
   JWT_SECRET: process.env.JWT_SECRET,
 
   BASE_DIR: __dirname,
-
-  ROOM_ID_LENGTH: 6,
-
-  MAX_ROOM_NAME_LENGTH: 80,
-  MIN_ROOM_NAME_LENGTH: 1,
 } as const;
 
 for (const key in config) {
