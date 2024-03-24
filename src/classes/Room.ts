@@ -56,7 +56,7 @@ export default class Room {
 
   public destroy() {
     this.socket.emit('destroyed');
-    this.socket.in(this.id).disconnectSockets();
+    this.socket.in(this.id).socketsLeave(this.id);
   }
 
   /*
